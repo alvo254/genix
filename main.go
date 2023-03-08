@@ -26,7 +26,7 @@ func main(){
 
 	//Create routes
 	router := mux.NewRouter()
-	router.HandleFunc("/users", getUser(db)).Methods("GET")
+	router.HandleFunc("/users", getUsers(db)).Methods("GET")
 	router.HandleFunc("/users/{id}", getUser(db)).Methods("GET")
 	router.HandleFunc("/users", createUSer(db)).Methods("POST")
 	router.HandleFunc("/users/{id}", updateUser(db)).Methods("PUT")
@@ -45,7 +45,7 @@ func jsonContentTypeMiddleWare(next http.Handler) http.Handler{
 }
 
 
-func getUser(db *sql.DB) http.HandlerFunc {
+func getUsers(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		rows, err := db.Query("SELECT * FROM users")
 		if err != nil{
@@ -66,5 +66,22 @@ func getUser(db *sql.DB) http.HandlerFunc {
 		}
 
 		json.NewEncoder(w).Encode(users)
+	}
+}
+
+
+//Get user by ID
+func getUser(db *sql.DB) http.HandlerFunc{
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		id := vars["id"]
+
+		var u User
+		err := db.QueryRow("SELECT * FROM users WHERE id = $1", id).Scan(&u.ID, &u.Name, &u.Email)
+		if err != nil{
+			log.Fatal(err)
+		}
+		
+		json.NewEncoder(w).Encode(u)
 	}
 }
