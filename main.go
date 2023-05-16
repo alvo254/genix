@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"os"
 	"github.com/gorilla/mux"
-	_"github.com/lib/pq"
+	_ "github.com/lib/pq"
 )
 
 type User struct{
@@ -81,7 +81,27 @@ func getUser(db *sql.DB) http.HandlerFunc{
 		if err != nil{
 			log.Fatal(err)
 		}
-		
+
 		json.NewEncoder(w).Encode(u)
+	}
+}
+
+func createUSer(db *sql.DB) http.HandlerFunc{
+	return func(w http.ResponseWriter, r *http.Request) {
+
+	}
+}
+
+
+func updateUser(db *sql.DB) http.HandlerFunc{
+	return func(w http.ResponseWriter, r *http.Request) {
+
+	}
+}
+
+
+func deleteUser(db *sql.DB) http.HandlerFunc{
+	return func(w http.ResponseWriter, r *http.Request) {
+
 	}
 }
